@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-b1e24a774af66ae3017f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "isac4",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "isac4::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-isac4-Debug-4550688c5545164fcf9a.json",
+					"name" : "isac4",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "isac4_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-isac4_autogen-Debug-04545025558931e0ab60.json",
+					"name" : "isac4_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "isac4_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-isac4_autogen_timestamp_deps-Debug-fb850ff2bcde7870dfd0.json",
+					"name" : "isac4_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Qt/Projects/isac4/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug",
+		"source" : "C:/Qt/Projects/isac4"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
