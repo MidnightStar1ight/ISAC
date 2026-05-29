@@ -21,7 +21,7 @@ int Application::exec(int argc, char* argv[]) {
     std::string inputFile = argv[3];
     std::string outputFile = argv[4];
 
-    std::cout << sampleRate << std::endl;
+    // std::cout << sampleRate << std::endl;
 
     // std::string mode = "encode";
     // int sampleRate = 16000;
@@ -55,13 +55,13 @@ int Application::exec(int argc, char* argv[]) {
                     uint16_t packetSize = static_cast<uint16_t>(encodedPacket.size());
                     outFile.write(reinterpret_cast<const char*>(&packetSize), sizeof(packetSize));
                     outFile.write(reinterpret_cast<const char*>(encodedPacket.data()), packetSize);
-                    std::cout << "Frame " << ++frameCount << ": wrote " << packetSize << " bytes\n";
+                    // std::cout << "Frame " << ++frameCount << ": wrote " << packetSize << " bytes\n";
                 }
                 // Если encode вернул false, продолжать
             }
 
             outFile.close();
-            std::cout << "Encoded " << frameCount << " frames to " << outputFile << "\n";
+            std::cout << "Encoded to " << outputFile << "\n";
         } /*else if (mode == "decode") {
             std::ifstream inFile(inputFile, std::ios::binary);
             if (!inFile.is_open()) {
@@ -115,7 +115,7 @@ int Application::exec(int argc, char* argv[]) {
                 std::vector<short> decodedFrame;
                 if (codec.decode(packet, decodedFrame)) {
                     // decodedFrame.size() должно быть 480 (30ms) или 960 (60ms)
-                    std::cout << "Got " << decodedFrame.size() << " decoded samples\n";
+                    // std::cout << "Got " << decodedFrame.size() << " decoded samples\n";
                     allPcm.insert(allPcm.end(), decodedFrame.begin(), decodedFrame.end());
                 } else {
                     std::cerr << "Warning: Failed to decode frame\n";
@@ -129,8 +129,8 @@ int Application::exec(int argc, char* argv[]) {
             inFile.close();
 
             // Проверка: количество семплов должно быть кратно 480 (для 30ms фреймов)
-            std::cout << "Total decoded samples: " << allPcm.size()
-                      << " (" << (allPcm.size() * 1000.0 / sampleRate) << " ms)\n";
+            // std::cout << "Total decoded samples: " << allPcm.size()
+            //           << " (" << (allPcm.size() * 1000.0 / sampleRate) << " ms)\n";
 
             if (!AudioHandler::writeWAV(outputFile, allPcm, sampleRate)) {
                 return 1;
