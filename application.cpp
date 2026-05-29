@@ -57,13 +57,8 @@ int Application::exec(int argc, char* argv[]) {
                     outFile.write(reinterpret_cast<const char*>(encodedPacket.data()), packetSize);
                     std::cout << "Frame " << ++frameCount << ": wrote " << packetSize << " bytes\n";
                 }
-                // Если encode вернул false, просто продолжаем (ISAC копит внутри)
+                // Если encode вернул false, продолжать
             }
-
-            // Проверяем, не осталось ли данных в ISAC буфере?
-            // Нужно "сбросить" ISAC, отправив нулевой фрейм или вызвав специальную функцию
-            // К сожалению, ISAC API не предоставляет явного сброса буфера.
-            // Данные могут быть потеряны, если количество семплов не кратно 30ms.
 
             outFile.close();
             std::cout << "Encoded " << frameCount << " frames to " << outputFile << "\n";
@@ -109,18 +104,9 @@ int Application::exec(int argc, char* argv[]) {
 
             // Читаем фреймы с префиксом размера
             while (inFile.peek() != EOF) {
-                // Читаем 2 байта размера (little-endian или big-endian?)
                 uint16_t packetSize;
                 inFile.read(reinterpret_cast<char*>(&packetSize), sizeof(packetSize));
                 if (inFile.gcount() != sizeof(packetSize)) break;
-
-                // Если вы записывали в big-endian, нужно конвертировать
-                // packetSize = (packetSize >> 8) | ((packetSize & 0xFF) << 8);
-
-                if (packetSize == 0 || packetSize > 2000) {
-                    std::cerr << "Invalid packet size: " << packetSize << "\n";
-                    break;
-                }
 
                 std::vector<unsigned char> packet(packetSize);
                 inFile.read(reinterpret_cast<char*>(packet.data()), packetSize);

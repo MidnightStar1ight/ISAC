@@ -95,7 +95,7 @@ bool ISACCodec::encode(const std::vector<short>& input,
         return false;
     }
 
-    // Передаем 10ms фрейм напрямую в ISAC
+    // Передаем 10ms фрейм напрямую в ISACw
     encodedData.resize(2000);
     int stream_len = WebRtcIsac_Encode(ISAC_main_inst,
                                        input.data(),
@@ -104,12 +104,12 @@ bool ISACCodec::encode(const std::vector<short>& input,
     if (stream_len > 0) {
         // ISAC накопил достаточно данных и закодировал 30ms фрейм
         encodedData.resize(stream_len);
-        std::cout << "Encoded to " << stream_len << " bytes\n";
+        // std::cout << "Encoded to " << stream_len << " bytes\n";
         return true;
     } else if (stream_len == 0) {
-        // Нужно больше данных (ISAC копит внутри)
+        // Нужно больше данных
         encodedData.clear();
-        return false;  // Не ошибка, просто ждем следующие 10ms
+        return false;  // Ждем следующие 10ms
     } else {
         std::cerr << "ISAC encoding error: " << stream_len << "\n";
         return false;
@@ -131,8 +131,6 @@ bool ISACCodec::encode(const std::vector<short>& input,
 
 bool ISACCodec::decode(const std::vector<unsigned char>& encodedData,
                        std::vector<short>& decodedPcm) {
-    // НЕ устанавливаем размер заранее!
-    // WebRtcIsac_Decode сам вернет правильное количество семплов
 
     // Временный буфер максимального размера (60ms = 960 семплов при 16kHz)
     decodedPcm.resize(960);  // Максимальный возможный размер
@@ -151,8 +149,8 @@ bool ISACCodec::decode(const std::vector<unsigned char>& encodedData,
     // Обрезаем до реального количества декодированных семплов
     decodedPcm.resize(samplesOut);
 
-    std::cout << "Decoded " << samplesOut << " samples ("
-              << (samplesOut * 1000.0 / sampleRate) << " ms)\n";
+    // std::cout << "Decoded " << samplesOut << " samples ("
+    //           << (samplesOut * 1000.0 / sampleRate) << " ms)\n";
 
     return true;
 }
