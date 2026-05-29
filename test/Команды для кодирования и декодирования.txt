@@ -1,0 +1,2 @@
+isac4.exe encode 16000 <input.wav> <output.isac>
+isac4.exe decode 16000 <input.isac> <output.wav>
