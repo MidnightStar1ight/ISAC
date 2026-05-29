@@ -35,6 +35,7 @@ add_executable(isac4
   application.h application.cpp
   isaccodec.h isaccodec.cpp
   audiohandler.h audiohandler.cpp
+  test_audiohandler.cpp
 )
 
 target_include_directories(isac4 PRIVATE ${ISAC_INCLUDE_PATH})

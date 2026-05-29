@@ -34,39 +34,40 @@ int Application::exec(int argc, char* argv[]) {
     try {
         if (mode == "encode") {
             std::vector<short> samples;
-
             if (!AudioHandler::readWAV(inputFile, samples, sampleRate)) {
                 return 1;
             }
 
-            if (sampleRate != 16000 && sampleRate != 32000) {
-                std::cerr << "ISAC only supports 16kHz or 32kHz. Input is " << sampleRate << "Hz\n";
-                return 1;
-            }
-
-            std::vector<unsigned char> encoded;
-            encoded.resize(1000);  // pre-allocate (max ISAC frame ~ 400–500 bytes)
-
+            const int samples10ms = sampleRate / 100;
             std::ofstream outFile(outputFile, std::ios::binary);
-            if (!outFile.is_open()) {
-                std::cerr << "Cannot write: " << outputFile << "\n";
-                return 1;
-            }
+            std::vector<unsigned char> encodedPacket;
 
-            const int frameLen = (sampleRate == 16000) ? 480 : 960;
-            for (size_t i = 0; i < samples.size(); i += frameLen) {
-                if (i + frameLen > samples.size()) break;
+            int frameCount = 0;
+            for (size_t i = 0; i < samples.size(); i += samples10ms) {
+                if (i + samples10ms > samples.size()) break;
 
-                std::vector<short> frame(samples.begin() + i, samples.begin() + i + frameLen);
-                std::vector<unsigned char> packet = encoded;
-                if (codec.encode(frame, packet)) {
-                    outFile.write(reinterpret_cast<const char*>(packet.data()), packet.size());
+                std::vector<short> frame10ms(samples.begin() + i,
+                                             samples.begin() + i + samples10ms);
+
+                // Передаем 10ms фрейм в кодек
+                if (codec.encode(frame10ms, encodedPacket)) {
+                    // ISAC закодировал полный 30ms фрейм
+                    uint16_t packetSize = static_cast<uint16_t>(encodedPacket.size());
+                    outFile.write(reinterpret_cast<const char*>(&packetSize), sizeof(packetSize));
+                    outFile.write(reinterpret_cast<const char*>(encodedPacket.data()), packetSize);
+                    std::cout << "Frame " << ++frameCount << ": wrote " << packetSize << " bytes\n";
                 }
+                // Если encode вернул false, просто продолжаем (ISAC копит внутри)
             }
-            outFile.close();
-            std::cout << "Encoded to " << outputFile << "\n";
 
-        } else if (mode == "decode") {
+            // Проверяем, не осталось ли данных в ISAC буфере?
+            // Нужно "сбросить" ISAC, отправив нулевой фрейм или вызвав специальную функцию
+            // К сожалению, ISAC API не предоставляет явного сброса буфера.
+            // Данные могут быть потеряны, если количество семплов не кратно 30ms.
+
+            outFile.close();
+            std::cout << "Encoded " << frameCount << " frames to " << outputFile << "\n";
+        } /*else if (mode == "decode") {
             std::ifstream inFile(inputFile, std::ios::binary);
             if (!inFile.is_open()) {
                 std::cerr << "Cannot read: " << inputFile << "\n";
@@ -95,6 +96,60 @@ int Application::exec(int argc, char* argv[]) {
 
         } else {
             return printUsage();
+        }*/
+
+        else if (mode == "decode") {
+            std::ifstream inFile(inputFile, std::ios::binary);
+            if (!inFile.is_open()) {
+                std::cerr << "Cannot read: " << inputFile << "\n";
+                return 1;
+            }
+
+            std::vector<short> allPcm;
+
+            // Читаем фреймы с префиксом размера
+            while (inFile.peek() != EOF) {
+                // Читаем 2 байта размера (little-endian или big-endian?)
+                uint16_t packetSize;
+                inFile.read(reinterpret_cast<char*>(&packetSize), sizeof(packetSize));
+                if (inFile.gcount() != sizeof(packetSize)) break;
+
+                // Если вы записывали в big-endian, нужно конвертировать
+                // packetSize = (packetSize >> 8) | ((packetSize & 0xFF) << 8);
+
+                if (packetSize == 0 || packetSize > 2000) {
+                    std::cerr << "Invalid packet size: " << packetSize << "\n";
+                    break;
+                }
+
+                std::vector<unsigned char> packet(packetSize);
+                inFile.read(reinterpret_cast<char*>(packet.data()), packetSize);
+                if (inFile.gcount() != packetSize) break;
+
+                std::vector<short> decodedFrame;
+                if (codec.decode(packet, decodedFrame)) {
+                    // decodedFrame.size() должно быть 480 (30ms) или 960 (60ms)
+                    std::cout << "Got " << decodedFrame.size() << " decoded samples\n";
+                    allPcm.insert(allPcm.end(), decodedFrame.begin(), decodedFrame.end());
+                } else {
+                    std::cerr << "Warning: Failed to decode frame\n";
+                    // Вставляем тишину длительностью 30ms
+                    int samples30ms = sampleRate * 30 / 1000;
+                    decodedFrame.assign(samples30ms, 0);
+                    allPcm.insert(allPcm.end(), decodedFrame.begin(), decodedFrame.end());
+                }
+            }
+
+            inFile.close();
+
+            // Проверка: количество семплов должно быть кратно 480 (для 30ms фреймов)
+            std::cout << "Total decoded samples: " << allPcm.size()
+                      << " (" << (allPcm.size() * 1000.0 / sampleRate) << " ms)\n";
+
+            if (!AudioHandler::writeWAV(outputFile, allPcm, sampleRate)) {
+                return 1;
+            }
+            std::cout << "Decoded to " << outputFile << "\n";
         }
 
         return 0;

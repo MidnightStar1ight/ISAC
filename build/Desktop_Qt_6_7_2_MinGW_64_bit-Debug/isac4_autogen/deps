@@ -66,6 +66,7 @@ isac4_autogen/timestamp: \
 	C:/Qt/Projects/isac4/isaccodec.cpp \
 	C:/Qt/Projects/isac4/isaccodec.h \
 	C:/Qt/Projects/isac4/main.cpp \
+	C:/Qt/Projects/isac4/test_audiohandler.cpp \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCXXInformation.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake \
 	C:/Qt/Tools/CMake_64/share/cmake-3.29/Modules/CMakeCommonLanguageInclude.cmake \

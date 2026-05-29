@@ -229,7 +229,8 @@
 		[ "C:/Qt/Projects/isac4/application.cpp", "MU", null ],
 		[ "C:/Qt/Projects/isac4/audiohandler.cpp", "MU", null ],
 		[ "C:/Qt/Projects/isac4/isaccodec.cpp", "MU", null ],
-		[ "C:/Qt/Projects/isac4/main.cpp", "MU", null ]
+		[ "C:/Qt/Projects/isac4/main.cpp", "MU", null ],
+		[ "C:/Qt/Projects/isac4/test_audiohandler.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

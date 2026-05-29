@@ -89,6 +89,14 @@ build CMakeFiles/isac4.dir/audiohandler.cpp.obj: CXX_COMPILER__isac4_unscanned_D
   OBJECT_DIR = CMakeFiles\isac4.dir
   OBJECT_FILE_DIR = CMakeFiles\isac4.dir
 
+build CMakeFiles/isac4.dir/test_audiohandler.cpp.obj: CXX_COMPILER__isac4_unscanned_Debug C$:/Qt/Projects/isac4/test_audiohandler.cpp || cmake_object_order_depends_target_isac4
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\isac4.dir\test_audiohandler.cpp.obj.d
+  FLAGS = -DQT_QML_DEBUG -g -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Qt/Projects/isac4/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/isac4_autogen/include -IC:/Qt/Projects/isac4 -isystem C:/Qt/6.7.2/mingw_64/include/QtCore -isystem C:/Qt/6.7.2/mingw_64/include -isystem C:/Qt/6.7.2/mingw_64/mkspecs/win32-g++
+  OBJECT_DIR = CMakeFiles\isac4.dir
+  OBJECT_FILE_DIR = CMakeFiles\isac4.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target isac4
@@ -97,7 +105,7 @@ build CMakeFiles/isac4.dir/audiohandler.cpp.obj: CXX_COMPILER__isac4_unscanned_D
 #############################################
 # Link the executable isac4.exe
 
-build isac4.exe: CXX_EXECUTABLE_LINKER__isac4_Debug CMakeFiles/isac4.dir/isac4_autogen/mocs_compilation.cpp.obj CMakeFiles/isac4.dir/main.cpp.obj CMakeFiles/isac4.dir/application.cpp.obj CMakeFiles/isac4.dir/isaccodec.cpp.obj CMakeFiles/isac4.dir/audiohandler.cpp.obj | C$:/Qt/Projects/isac4/lib/libisac.a C$:/Qt/6.7.2/mingw_64/lib/libQt6Core.a || isac4_autogen isac4_autogen_timestamp_deps
+build isac4.exe: CXX_EXECUTABLE_LINKER__isac4_Debug CMakeFiles/isac4.dir/isac4_autogen/mocs_compilation.cpp.obj CMakeFiles/isac4.dir/main.cpp.obj CMakeFiles/isac4.dir/application.cpp.obj CMakeFiles/isac4.dir/isaccodec.cpp.obj CMakeFiles/isac4.dir/audiohandler.cpp.obj CMakeFiles/isac4.dir/test_audiohandler.cpp.obj | C$:/Qt/Projects/isac4/lib/libisac.a C$:/Qt/6.7.2/mingw_64/lib/libQt6Core.a || isac4_autogen isac4_autogen_timestamp_deps
   FLAGS = -DQT_QML_DEBUG -g
   LINK_LIBRARIES = C:/Qt/Projects/isac4/lib/libisac.a  C:/Qt/6.7.2/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\isac4.dir

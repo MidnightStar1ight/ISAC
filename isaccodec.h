@@ -15,7 +15,10 @@ private:
 
     int16_t speechType[1];
 
-    int stream_len;
+    std::vector<short> encoderBuffer;  // Буфер для накопления 10ms фреймов
+    const int samples10ms;
+
+    // int stream_len;
 
 public:
     explicit ISACCodec(int sampleRate = 16000);  // ISAC supports 16kHz or 32kHz
